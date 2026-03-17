@@ -18,13 +18,25 @@
       --pad-x: clamp(24px, 11.1vw, 160px);
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100%;
+    }
 
     body {
       font-family: 'Inter', sans-serif;
       color: var(--dark);
       overflow-x: hidden;
       background: var(--cream);
+      height: 100%;
+    }
+
+    section {
+      scroll-snap-align: start;
+      height: 100svh;
+      overflow: hidden;
     }
 
     img { max-width: 100%; display: block; }
@@ -80,11 +92,10 @@
     /* ─── IMAGINE ─── */
     .imagine {
       background: var(--cream);
-      padding: 160px var(--pad-x);
+      padding: 0 var(--pad-x);
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 600px;
     }
     .imagine-inner { text-align: center; }
     .imagine h1 {
@@ -113,9 +124,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: center;
+      justify-content: center;
       gap: clamp(40px, 5vw, 80px);
-      padding: 100px var(--pad-x);
-      min-height: 600px;
+      padding: 0 var(--pad-x);
     }
     .feature--light { background: var(--cream); }
     .feature--dark  { background: var(--dark); }
@@ -161,12 +172,14 @@
     /* ─── GIFT ─── */
     .gift {
       background: var(--white);
-      padding: 120px var(--pad-x) 0;
+      padding: 60px var(--pad-x) 0;
+      display: flex;
+      flex-direction: column;
     }
     .gift-header {
       text-align: center;
       max-width: 900px;
-      margin: 0 auto 72px;
+      margin: 0 auto 40px;
     }
     .gift-header h2 {
       font-family: 'Inter', sans-serif;
@@ -207,7 +220,7 @@
     }
     .gift-phone img {
       width: 100%;
-      height: 560px;
+      height: 42vh;
       object-fit: cover;
       object-position: top;
     }
@@ -215,11 +228,14 @@
     /* ─── USE CASES ─── */
     .use-cases {
       background: var(--cream);
-      padding: 120px var(--pad-x);
+      padding: 60px var(--pad-x);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .use-cases-header {
       text-align: center;
-      margin-bottom: 64px;
+      margin-bottom: 36px;
     }
     .section-label {
       display: block;
@@ -248,11 +264,11 @@
       background: white;
       border: 1px solid rgba(26,23,20,0.1);
       border-radius: 14px;
-      padding: 36px 28px;
+      padding: 20px 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 240px;
+      min-height: 100px;
     }
     .use-case-card p {
       font-size: 14px;
@@ -266,7 +282,6 @@
       background: var(--white);
       position: relative;
       overflow: hidden;
-      height: 820px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -320,11 +335,14 @@
     /* ─── THE CARD ─── */
     .the-card {
       background: var(--dark);
-      padding: 120px var(--pad-x);
+      padding: 72px var(--pad-x);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .the-card-header {
       text-align: center;
-      margin-bottom: 72px;
+      margin-bottom: 48px;
     }
     .the-card-header .section-label { color: rgba(255,255,255,0.35); }
     .the-card-header h2 {
@@ -343,11 +361,11 @@
     }
     .wish-card {
       border-radius: 16px;
-      padding: 36px 32px;
+      padding: 28px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 480px;
+      min-height: 300px;
     }
     .wish-card--cream  { background: #F0EBE1; }
     .wish-card--forest { background: #2B4A2B; }
@@ -397,7 +415,7 @@
       text-transform: uppercase;
       color: var(--dark);
       opacity: 0.35;
-      margin-top: 44px;
+      margin-top: 24px;
     }
     .wish-card--forest .wish-card-footer,
     .wish-card--mocha  .wish-card-footer { color: rgba(255,255,255,0.35); opacity: 1; }
@@ -405,11 +423,12 @@
     /* ─── CTA ─── */
     .cta {
       background: var(--cream);
-      padding: 160px var(--pad-x);
+      padding: 40px var(--pad-x);
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 28px;
     }
     .cta h2 {
@@ -482,6 +501,8 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
+      section { height: auto; min-height: 100svh; overflow-y: auto; }
+
       .feature {
         grid-template-columns: 1fr;
         padding: 80px var(--pad-x);
@@ -493,28 +514,18 @@
       .feature-phone img { width: min(260px, 65%); }
 
       .gift-phones { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
-      .gift-phone img { height: 480px; }
+      .gift-phone img { height: 320px; }
 
       .use-cases-grid { grid-template-columns: repeat(2, 1fr); }
 
       .wish-cards { grid-template-columns: 1fr; max-width: 400px; }
-
-      .pain-points { height: 700px; }
     }
 
     @media (max-width: 600px) {
-      .imagine { padding: 120px var(--pad-x); }
-
       .use-cases-grid { grid-template-columns: 1fr; }
 
-      .pain-points {
-        height: auto;
-        min-height: 640px;
-        padding: 80px 24px;
-      }
-      .pain-word {
-        font-size: clamp(40px, 12vw, 72px);
-      }
+      .pain-points { padding: 80px 24px; }
+      .pain-word { font-size: clamp(40px, 12vw, 72px); }
 
       footer {
         flex-direction: column;
@@ -744,7 +755,6 @@
   <script type="module">
     import { FlutedGlass } from 'https://esm.sh/@paper-design/shaders@0.0.71';
 
-    const SVG_URL = 'images/logo-twentyfive.svg';
     const canvas = document.getElementById('hero-canvas');
     const aspect = 483 / 1178;
 
@@ -753,33 +763,9 @@
       return { width: Math.round(w), height: Math.round(w * aspect) };
     }
 
-    // Rasterise the SVG to a PNG bitmap so WebGL can use it as a texture
-    async function rasteriseSvg(url, w, h) {
-      const res = await fetch(url);
-      const svgText = await res.text();
-      const blob = new Blob([svgText], { type: 'image/svg+xml' });
-      const blobUrl = URL.createObjectURL(blob);
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          const offscreen = document.createElement('canvas');
-          offscreen.width = w;
-          offscreen.height = h;
-          offscreen.getContext('2d').drawImage(img, 0, 0, w, h);
-          URL.revokeObjectURL(blobUrl);
-          resolve(offscreen.toDataURL('image/png'));
-        };
-        img.onerror = reject;
-        img.src = blobUrl;
-      });
-    }
-
     const { width, height } = getSize();
     canvas.width = width;
     canvas.height = height;
-
-    // Render logo SVG at 4× for a crisp texture
-    const logoPng = await rasteriseSvg(SVG_URL, 511 * 4, 163 * 4);
 
     const shader = new FlutedGlass({
       canvas,
@@ -792,7 +778,7 @@
       blur: 0.8,
       edges: 0.21,
       stretch: 0.11,
-      image: logoPng,
+      image: 'images/logo-twentyfive.png',
       scale: 1,
       fit: 'contain',
       highlights: 0,
