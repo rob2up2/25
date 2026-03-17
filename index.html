@@ -29,53 +29,6 @@
 
     img { max-width: 100%; display: block; }
 
-    /* ─── NAV ─── */
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 22px var(--pad-x);
-      transition: background 0.35s ease, backdrop-filter 0.35s ease;
-    }
-    .nav.scrolled {
-      background: rgba(243, 239, 231, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .nav-logo {
-      height: 16px;
-      transition: filter 0.35s ease;
-    }
-    .nav.scrolled .nav-logo {
-      filter: brightness(0);
-    }
-    .nav-cta {
-      font-size: 12px;
-      font-weight: 500;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.45);
-      border-radius: 20px;
-      padding: 9px 22px;
-      text-decoration: none;
-      letter-spacing: 0.02em;
-      transition: background 0.2s, color 0.2s, border-color 0.35s;
-    }
-    .nav.scrolled .nav-cta {
-      color: var(--dark);
-      border-color: rgba(26,23,20,0.25);
-    }
-    .nav-cta:hover {
-      background: white;
-      color: var(--dark);
-    }
-    .nav.scrolled .nav-cta:hover {
-      background: var(--dark);
-      color: white;
-    }
-
     /* ─── HERO ─── */
     .hero {
       position: relative;
@@ -87,10 +40,23 @@
       justify-content: center;
       overflow: hidden;
     }
-    .hero-logo {
-      width: min(520px, 72vw);
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(in oklab 180deg,
+        oklab(15.8% -0.009 0.006 / 55%) 0%,
+        oklab(15.8% -0.009 0.006 / 20%) 40%,
+        oklab(15.8% -0.009 0.006 / 45%) 100%);
+      pointer-events: none;
+    }
+    #hero-canvas {
+      mix-blend-mode: overlay;
       position: relative;
       z-index: 1;
+      display: block;
+      width: min(1178px, 85vw);
+      aspect-ratio: 1178 / 483;
+      height: auto;
     }
     .hero-scroll {
       position: absolute;
@@ -109,11 +75,7 @@
       text-transform: uppercase;
       color: rgba(255,255,255,0.6);
     }
-    .hero-scroll-line {
-      width: 1px;
-      height: 40px;
-      background: rgba(255,255,255,0.35);
-    }
+    .hero-scroll svg { display: block; }
 
     /* ─── IMAGINE ─── */
     .imagine {
@@ -568,18 +530,15 @@
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav id="nav" class="nav">
-    <img class="nav-logo" src="images/logo-twentyfive.svg" alt="Twentyfive">
-    <a href="#cta" class="nav-cta">Download</a>
-  </nav>
-
   <!-- HERO -->
   <section class="hero">
-    <img class="hero-logo" src="images/logo-twentyfive.svg" alt="Twentyfive">
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <canvas id="hero-canvas"></canvas>
     <div class="hero-scroll" aria-hidden="true">
       <span>Scroll</span>
-      <div class="hero-scroll-line"></div>
+      <svg width="1" height="40" viewBox="0 0 1 40" aria-hidden="true">
+        <line x1="0.5" y1="0" x2="0.5" y2="40" stroke="#F3EFE74D"/>
+      </svg>
     </div>
   </section>
 
@@ -782,12 +741,53 @@
     </nav>
   </footer>
 
-  <script>
-    const nav = document.getElementById('nav');
-    const onScroll = () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
+  <script type="module">
+    import { FlutedGlass } from 'https://esm.sh/@paper-design/shaders@0.0.71';
+
+    const canvas = document.getElementById('hero-canvas');
+    const aspect = 483 / 1178;
+
+    function getSize() {
+      const w = Math.min(1178, window.innerWidth * 0.85);
+      return { width: Math.round(w), height: Math.round(w * aspect) };
+    }
+
+    const { width, height } = getSize();
+    canvas.width = width;
+    canvas.height = height;
+
+    const shader = new FlutedGlass({
+      canvas,
+      size: 0.83,
+      shape: 'wave',
+      angle: -125,
+      distortionShape: 'contour',
+      distortion: 0.62,
+      shift: 0,
+      blur: 0.8,
+      edges: 0.21,
+      stretch: 0.11,
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTExIiBoZWlnaHQ9IjE2MyIgdmlld0JveD0iMCAwIDUxMSAxNjMiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik00ODYuNDkxIDE2Mi44QzQ4Mi4wOTEgMTYyLjggNDc4LjA5MSAxNjEuODY3IDQ3NC40OTEgMTYwQzQ3MC44OTEgMTU4LjEzMyA0NjguMDI0IDE1NS41MzMgNDY1Ljg5MSAxNTIuMkM0NjMuODkxIDE0OC44NjcgNDYyLjg5MSAxNDUuMTMzIDQ2Mi44OTEgMTQxVjIxLjhDNDYyLjg5MSAxNy42NjY3IDQ2My44OTEgMTMuOTMzMyA0NjUuODkxIDEwLjZDNDY4LjAyNCA3LjI2NjY3IDQ3MC44OTEgNC42NjY2NyA0NzQuNDkxIDIuOEM0NzguMDkxIDAuOTMzMzMzIDQ4Mi4wOTEgMCA0ODYuNDkxIDBDNDkwLjg5MSAwIDQ5NC44OTEgMC45MzMzMzMgNDk4LjQ5MSAyLjhDNTAyLjA5MSA0LjY2NjY3IDUwNC44OTEgNy4yNjY2NyA1MDYuODkxIDEwLjZDNTA5LjAyNCAxMy45MzMzIDUxMC4wOTEgMTcuNjY2NyA1MTAuMDkxIDIxLjhWODguNEg0ODMuNjkxVjE0MUM0ODMuNjkxIDE0MS44IDQ4My45NTcgMTQyLjQ2NyA0ODQuNDkxIDE0M0M0ODUuMDI0IDE0My41MzMgNDg1LjY5MSAxNDMuOCA0ODYuNDkxIDE0My44QzQ4Ny4yOTEgMTQzLjggNDg3Ljk1NyAxNDMuNTMzIDQ4OC40OTEgMTQzQzQ4OS4wMjQgMTQyLjQ2NyA0ODkuMjkxIDE0MS44IDQ4OS4yOTEgMTQxVjEwM0g1MTAuMDkxVjE0MUM1MTAuMDkxIDE0NS4xMzMgNTA5LjAyNCAxNDguODY3IDUwNi44OTEgMTUyLjJDNTA0Ljg5MSAxNTUuNTMzIDUwMi4wOTEgMTU4LjEzMyA0OTguNDkxIDE2MEM0OTQuODkxIDE2MS44NjcgNDkwLjg5MSAxNjIuOCA0ODYuNDkxIDE2Mi44Wk00ODkuMjkxIDY5LjRWMjEuOEM0ODkuMjkxIDIxIDQ4OS4wMjQgMjAuMzMzMyA0ODguNDkxIDE5LjhDNDg3Ljk1NyAxOS4yNjY3IDQ4Ny4yOTEgMTkgNDg2LjQ5MSAxOUM0ODUuNjkxIDE5IDQ4NS4wMjQgMTkuMjY2NyA0ODQuNDkxIDE5LjhDNDgzLjk1NyAyMC4zMzMzIDQ4My42OTEgMjEgNDgzLjY5MSAyMS44VjY5LjRINDg5LjI5MVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik00MTAuMTEzIDEuMzk5OUg0MzAuOTEzTDQzNC43MTMgMTIxLjRMNDM4LjMxMyAxLjM5OTlINDU5LjExM0w0NDUuMTEzIDE2MS40SDQyNC4zMTNMNDEwLjExMyAxLjM5OTlaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMzg1LjU0NyA0MS4zOTk5SDQwNi4zNDdWMTYxLjRIMzg1LjU0N1Y0MS4zOTk5Wk0zODUuNTQ3IDEuMzk5OUg0MDYuMzQ3VjI5LjM5OTlIMzg1LjU0N1YxLjM5OTlaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMzM0LjU3IDIxLjhDMzM0LjU3IDE3LjY2NjcgMzM1LjU3IDEzLjkzMzMgMzM3LjU3IDEwLjZDMzM5LjcwNCA3LjI2NjY3IDM0Mi41NyA0LjY2NjY3IDM0Ni4xNyAyLjhDMzQ5Ljc3IDAuOTMzMzMzIDM1My43NyAwIDM1OC4xNyAwQzM2Mi41NyAwIDM2Ni41NyAwLjkzMzMzMyAzNzAuMTcgMi44QzM3My43NyA0LjY2NjY3IDM3Ni41NyA3LjI2NjY3IDM3OC41NyAxMC42QzM4MC43MDQgMTMuOTMzMyAzODEuNzcgMTcuNjY2NyAzODEuNzcgMjEuOFY3OS40SDM2MC45N1YyMS44QzM2MC45NyAyMSAzNjAuNzA0IDIwLjMzMzMgMzYwLjE3IDE5LjhDMzU5LjYzNyAxOS4yNjY3IDM1OC45NyAxOSAzNTguMTcgMTlDMzU3LjM3IDE5IDM1Ni43MDQgMTkuMjY2NyAzNTYuMTcgMTkuOEMzNTUuNjM3IDIwLjMzMzMgMzU1LjM3IDIxIDM1NS4zNyAyMS44Vjk4LjhIMzcxLjk3VjExOEgzNTUuMzdWMTYxLjRIMzM0LjU3VjIxLjhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMjk1Ljk5MyAxMjEuNEwyODEuNzkzIDEuMzk5OUgzMDIuNTkzTDMwNi4zOTMgODguNTk5OUwzMDkuOTkzIDEuMzk5OUgzMzAuNzkzTDMxNi43OTMgMTIxLjRWMTYxLjRIMjk1Ljk5M1YxMjEuNFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yNTUuMjQxIDE2Mi44QzI1MC44NDEgMTYyLjggMjQ2Ljg0MSAxNjEuODY3IDI0My4yNDEgMTYwQzIzOS42NDEgMTU4LjEzMyAyMzYuNzc0IDE1NS41MzMgMjM0LjY0MSAxNTIuMkMyMzIuNjQxIDE0OC44NjcgMjMxLjY0MSAxNDUuMTMzIDIzMS42NDEgMTQxVjEuMzk5OUgyNTIuNDQxVjIxLjM5OTlIMjc4Ljg0MVY0MC4zOTk5SDI1Mi40NDFWMTQxQzI1Mi40NDEgMTQxLjggMjUyLjcwNyAxNDIuNDY3IDI1My4yNDEgMTQzQzI1My43NzQgMTQzLjUzMyAyNTQuNDQxIDE0My44IDI1NS4yNDEgMTQzLjhDMjU2LjA0MSAxNDMuOCAyNTYuNzA3IDE0My41MzMgMjU3LjI0MSAxNDNDMjU3Ljc3NCAxNDIuNDY3IDI1OC4wNDEgMTQxLjggMjU4LjA0MSAxNDFWODEuNTk5OUgyNzguODQxVjE0MUMyNzguODQxIDE0NS4xMzMgMjc3Ljc3NCAxNDguODY3IDI3NS42NDEgMTUyLjJDMjczLjY0MSAxNTUuNTMzIDI3MC44NDEgMTU4LjEzMyAyNjcuMjQxIDE2MEMyNjMuNjQxIDE2MS44NjcgMjU5LjY0MSAxNjIuOCAyNTUuMjQxIDE2Mi44WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTE3OC45MDYgMS4zOTk5MUgxOTkuNzA2VjcuOTk5OTJDMjAxLjA0IDUuNTk5OTIgMjAyLjcwNiAzLjczMzI1IDIwNC43MDYgMi4zOTk5MUMyMDYuNzA2IDEuMDY2NTcgMjA4Ljg0IDAuMzk5OTAyIDIxMS4xMDYgMC4zOTk5MDJDMjE0LjA0IDAuMzk5OTAyIDIxNi41NzMgMS4zMzMyNCAyMTguNzA2IDMuMTk5OTJDMjIwLjk3MyA1LjA2NjU4IDIyMi43NzMgNy43MzMyNCAyMjQuMTA2IDExLjE5OTlDMjI1LjQ0IDE0LjUzMzIgMjI2LjEwNiAxOC4xOTk5IDIyNi4xMDYgMjIuMTk5OVYxNjEuNEgyMDUuMzA2VjIyLjE5OTlDMjA1LjMwNiAyMS4zOTk5IDIwNS4wNCAyMC43MzMyIDIwNC41MDYgMjAuMTk5OUMyMDMuOTczIDE5LjY2NjYgMjAzLjMwNiAxOS4zOTk5IDIwMi41MDYgMTkuMzk5OUMyMDEuNzA2IDE5LjM5OTkgMjAxLjA0IDE5LjY2NjYgMjAwLjUwNiAyMC4xOTk5QzE5OS45NzMgMjAuNzMzMiAxOTkuNzA2IDIxLjM5OTkgMTk5LjcwNiAyMi4xOTk5VjE2MS40SDE3OC45MDZWMS4zOTk5MVoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xNDkuNzcyIDE2Mi44QzE0NS4zNzIgMTYyLjggMTQxLjM3MiAxNjEuODY3IDEzNy43NzIgMTYwQzEzNC4xNzIgMTU4LjEzMyAxMzEuMzA1IDE1NS41MzMgMTI5LjE3MiAxNTIuMkMxMjcuMTcyIDE0OC44NjcgMTI2LjE3MiAxNDUuMTMzIDEyNi4xNzIgMTQxVjIxLjhDMTI2LjE3MiAxNy42NjY3IDEyNy4xNzIgMTMuOTMzMyAxMjkuMTcyIDEwLjZDMTMxLjMwNSA3LjI2NjY3IDEzNC4xNzIgNC42NjY2NyAxMzcuNzcyIDIuOEMxNDEuMzcyIDAuOTMzMzMzIDE0NS4zNzIgMCAxNDkuNzcyIDBDMTU0LjE3MiAwIDE1OC4xNzIgMC45MzMzMzMgMTYxLjc3MiAyLjhDMTY1LjM3MiA0LjY2NjY3IDE2OC4xNzIgNy4yNjY2NyAxNzAuMTcyIDEwLjZDMTcyLjMwNSAxMy45MzMzIDE3My4zNzIgMTcuNjY2NyAxNzMuMzcyIDIxLjhWODguNEgxNDYuOTcyVjE0MUMxNDYuOTcyIDE0MS44IDE0Ny4yMzkgMTQyLjQ2NyAxNDcuNzcyIDE0M0MxNDguMzA1IDE0My41MzMgMTQ4Ljk3MiAxNDMuOCAxNDkuNzcyIDE0My44QzE1MC41NzIgMTQzLjggMTUxLjIzOSAxNDMuNTMzIDE1MS43NzIgMTQzQzE1Mi4zMDUgMTQyLjQ2NyAxNTIuNTcyIDE0MS44IDE1Mi41NzIgMTQxVjEwM0gxNzMuMzcyVjE0MUMxNzMuMzcyIDE0NS4xMzMgMTcyLjMwNSAxNDguODY3IDE3MC4xNzIgMTUyLjJDMTY4LjE3MiAxNTUuNTMzIDE2NS4zNzIgMTU4LjEzMyAxNjEuNzcyIDE2MEMxNTguMTcyIDE2MS44NjcgMTU0LjE3MiAxNjIuOCAxNDkuNzcyIDE2Mi44Wk0xNTIuNTcyIDY5LjRWMjEuOEMxNTIuNTcyIDIxIDE1Mi4zMDUgMjAuMzMzMyAxNTEuNzcyIDE5LjhDMTUxLjIzOSAxOS4yNjY3IDE1MC41NzIgMTkgMTQ5Ljc3MiAxOUMxNDguOTcyIDE5IDE0OC4zMDUgMTkuMjY2NyAxNDcuNzcyIDE5LjhDMTQ3LjIzOSAyMC4zMzMzIDE0Ni45NzIgMjEgMTQ2Ljk3MiAyMS44VjY5LjRIMTUyLjU3MloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik01MC4xNTIzIDEuMzk5OUg3MC45NTIzTDcyLjE1MjMgMTIxLjRMNzguMzUyMyAxLjM5OTlIOTQuMTUyM0wxMDAuMzUyIDEyMS40TDEwMS43NTIgMS4zOTk5SDEyMi41NTJMMTExLjc1MiAxNjEuNEg5MC45NTIzTDg2LjM1MjMgNTguOTk5OUw4MS43NTIzIDE2MS40SDYwLjk1MjNMNTAuMTUyMyAxLjM5OTlaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMjMuNiAxNjIuOEMxOS4yIDE2Mi44IDE1LjIgMTYxLjg2NyAxMS42IDE2MEM4IDE1OC4xMzMgNS4xMzMzMyAxNTUuNTMzIDMgMTUyLjJDMSAxNDguODY3IDAgMTQ1LjEzMyAwIDE0MVYxLjM5OTlIMjAuOFYyMS4zOTk5SDQ3LjJWNDAuMzk5OUgyMC44VjE0MUMyMC44IDE0MS44IDIxLjA2NjcgMTQyLjQ2NyAyMS42IDE0M0MyMi4xMzMzIDE0My41MzMgMjIuOCAxNDMuOCAyMy42IDE0My44QzI0LjQgMTQzLjggMjUuMDY2NyAxNDMuNTMzIDI1LjYgMTQzQzI2LjEzMzMgMTQyLjQ2NyAyNi40IDE0MS44IDI2LjQgMTQxVjgxLjU5OTlINDcuMlYxNDFDNDcuMiAxNDUuMTMzIDQ2LjEzMzMgMTQ4Ljg2NyA0NCAxNTIuMkM0MiAxNTUuNTMzIDM5LjIgMTU4LjEzMyAzNS42IDE2MEMzMiAxNjEuODY3IDI4IDE2Mi44IDIzLjYgMTYyLjhaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+      scale: 1,
+      fit: 'contain',
+      highlights: 0,
+      shadows: 0,
+      grainOverlay: 0,
+      grainMixer: 0.13,
+      colorBack: '#00000000',
+      colorHighlight: '#FFFFFF',
+      colorShadow: '#000000',
+    });
+    shader.play();
+
+    let rafId;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const { width, height } = getSize();
+        shader.setSize(width, height);
+      });
+    }, { passive: true });
   </script>
 
 </body>
