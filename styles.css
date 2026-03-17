@@ -10,8 +10,14 @@
 
 /* ─── BASE ─── */
 
+html, body {
+  height: 100%;
+  scroll-snap-type: y mandatory;
+}
+
 html {
   scroll-behavior: smooth;
+  overflow-y: scroll;
 }
 
 body {
@@ -20,7 +26,6 @@ body {
   background: var(--cream);
   overflow-x: hidden;
   overflow-y: scroll;
-  scroll-snap-type: y mandatory;
 }
 
 img { max-width: 100%; display: block; }
@@ -545,17 +550,11 @@ footer {
 /* ─── RESPONSIVE ─── */
 
 @media (max-width: 900px) {
-  html { scroll-snap-type: none; }
-
   section {
     height: auto;
     min-height: 100svh;
-    overflow-y: auto;
-    scroll-snap-align: none;
-    scroll-snap-stop: normal;
+    overflow: visible;
   }
-
-  footer { scroll-snap-align: none; }
 
   .feature {
     grid-template-columns: 1fr;
