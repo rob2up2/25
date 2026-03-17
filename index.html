@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>25 — Life planning, simplified</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F3EFE7;
+      --dark: #1A1714;
+      --green: #1B3A1B;
+      --white: #FFFFFF;
+      --pad-x: clamp(24px, 11.1vw, 160px);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      overflow-x: hidden;
+      background: var(--cream);
+    }
+
+    img { max-width: 100%; display: block; }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px var(--pad-x);
+      transition: background 0.35s ease, backdrop-filter 0.35s ease;
+    }
+    .nav.scrolled {
+      background: rgba(243, 239, 231, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      height: 16px;
+      transition: filter 0.35s ease;
+    }
+    .nav.scrolled .nav-logo {
+      filter: brightness(0);
+    }
+    .nav-cta {
+      font-size: 12px;
+      font-weight: 500;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 20px;
+      padding: 9px 22px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, color 0.2s, border-color 0.35s;
+    }
+    .nav.scrolled .nav-cta {
+      color: var(--dark);
+      border-color: rgba(26,23,20,0.25);
+    }
+    .nav-cta:hover {
+      background: white;
+      color: var(--dark);
+    }
+    .nav.scrolled .nav-cta:hover {
+      background: var(--dark);
+      color: white;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 600px;
+      background: url('images/hero.png') center center / cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-logo {
+      width: min(520px, 72vw);
+      position: relative;
+      z-index: 1;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-scroll span {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ─── IMAGINE ─── */
+    .imagine {
+      background: var(--cream);
+      padding: 160px var(--pad-x);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 600px;
+    }
+    .imagine-inner { text-align: center; }
+    .imagine h1 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(52px, 6.5vw, 88px);
+      color: var(--green);
+      letter-spacing: -0.025em;
+      margin-bottom: 52px;
+    }
+    .imagine-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .imagine-lines p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(19px, 2vw, 26px);
+      color: var(--dark);
+      opacity: 0.72;
+      line-height: 1.5;
+    }
+
+    /* ─── FEATURES ─── */
+    .feature {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: clamp(40px, 5vw, 80px);
+      padding: 100px var(--pad-x);
+      min-height: 600px;
+    }
+    .feature--light { background: var(--cream); }
+    .feature--dark  { background: var(--dark); }
+    .feature--reverse .feature-text { order: 2; }
+    .feature--reverse .feature-phone { order: 1; }
+
+    .feature-number {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      opacity: 0.4;
+      margin-bottom: 18px;
+    }
+    .feature--dark .feature-number { color: rgba(255,255,255,0.4); }
+    .feature h2 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 3.5vw, 48px);
+      color: var(--green);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .feature--dark h2 { color: white; }
+    .feature-text p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 1.6vw, 22px);
+      color: var(--dark);
+      opacity: 0.6;
+      line-height: 1.6;
+    }
+    .feature--dark .feature-text p { color: rgba(255,255,255,0.55); }
+    .feature-phone {
+      display: flex;
+      justify-content: center;
+    }
+    .feature-phone img {
+      width: min(300px, 100%);
+      height: auto;
+    }
+
+    /* ─── GIFT ─── */
+    .gift {
+      background: var(--white);
+      padding: 120px var(--pad-x) 0;
+    }
+    .gift-header {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 72px;
+    }
+    .gift-header h2 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: clamp(36px, 5.8vw, 84px);
+      color: var(--green);
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 24px;
+    }
+    .gift-header p {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(15px, 1.4vw, 18px);
+      color: var(--dark);
+      opacity: 0.7;
+      line-height: 1.72;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .gift-phones {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+    }
+    .gift-phone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+    .gift-phone p {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--dark);
+      text-align: center;
+      line-height: 1.55;
+      max-width: 260px;
+    }
+    .gift-phone img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    /* ─── USE CASES ─── */
+    .use-cases {
+      background: var(--cream);
+      padding: 120px var(--pad-x);
+    }
+    .use-cases-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-label {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dark);
+      opacity: 0.45;
+      margin-bottom: 12px;
+    }
+    .use-cases-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .use-cases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .use-case-card {
+      background: white;
+      border: 1px solid rgba(26,23,20,0.1);
+      border-radius: 14px;
+      padding: 36px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 240px;
+    }
+    .use-case-card p {
+      font-size: 14px;
+      color: var(--dark);
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    /* ─── PAIN POINTS ─── */
+    .pain-points {
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      height: 820px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pain-word {
+      position: absolute;
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      color: var(--green);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+    }
+    .pain-word--paperwork {
+      font-size: clamp(56px, 9.5vw, 136px);
+      top: 60px; left: 20px;
+      transform: rotate(-20deg);
+      transform-origin: left top;
+    }
+    .pain-word--callcentres {
+      font-size: clamp(44px, 7.8vw, 112px);
+      top: 20px; right: 20px;
+      transform: rotate(-15deg);
+      transform-origin: right top;
+    }
+    .pain-word--redtape {
+      font-size: clamp(50px, 9vw, 130px);
+      bottom: 50px; left: 20px;
+      transform: rotate(20deg);
+      transform-origin: left bottom;
+    }
+    .pain-word--protocol {
+      font-size: clamp(46px, 8.5vw, 122px);
+      bottom: 30px; right: 20px;
+      transform: rotate(-20deg);
+      transform-origin: right bottom;
+    }
+    .pain-body {
+      max-width: 540px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      padding: 0 clamp(16px, 5vw, 60px);
+    }
+    .pain-body p {
+      font-size: clamp(16px, 1.5vw, 21px);
+      color: var(--dark);
+      line-height: 1.72;
+    }
+
+    /* ─── THE CARD ─── */
+    .the-card {
+      background: var(--dark);
+      padding: 120px var(--pad-x);
+    }
+    .the-card-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+    .the-card-header .section-label { color: rgba(255,255,255,0.35); }
+    .the-card-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4.5vw, 62px);
+      font-weight: 500;
+      color: white;
+      line-height: 1.2;
+    }
+    .wish-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+    .wish-card {
+      border-radius: 16px;
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 480px;
+    }
+    .wish-card--cream  { background: #F0EBE1; }
+    .wish-card--forest { background: #2B4A2B; }
+    .wish-card--mocha  { background: #3C3330; }
+
+    .wish-card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+    .wish-card--forest .wish-card-name,
+    .wish-card--mocha  .wish-card-name { color: rgba(255,255,255,0.85); }
+
+    .wish-card-divider {
+      width: 24px;
+      height: 1px;
+      background: var(--dark);
+      opacity: 0.25;
+      margin-bottom: 24px;
+    }
+    .wish-card--forest .wish-card-divider,
+    .wish-card--mocha  .wish-card-divider { background: rgba(255,255,255,0.25); }
+
+    .wish-card-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+    .wish-card-items li {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      color: var(--dark);
+      opacity: 0.7;
+      line-height: 1.5;
+    }
+    .wish-card--forest .wish-card-items li,
+    .wish-card--mocha  .wish-card-items li { color: rgba(255,255,255,0.6); opacity: 1; }
+
+    .wish-card-footer {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--dark);
+      opacity: 0.35;
+      margin-top: 44px;
+    }
+    .wish-card--forest .wish-card-footer,
+    .wish-card--mocha  .wish-card-footer { color: rgba(255,255,255,0.35); opacity: 1; }
+
+    /* ─── CTA ─── */
+    .cta {
+      background: var(--cream);
+      padding: 160px var(--pad-x);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+    }
+    .cta h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 68px);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.15;
+    }
+    .cta-sub {
+      font-size: 15px;
+      color: var(--dark);
+      opacity: 0.5;
+      line-height: 1.65;
+    }
+    .app-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .app-btn {
+      background: var(--dark);
+      color: white;
+      border-radius: 10px;
+      padding: 13px 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      min-width: 164px;
+      transition: opacity 0.2s;
+    }
+    .app-btn:hover { opacity: 0.82; }
+    .app-btn-icon { width: 20px; height: 20px; flex-shrink: 0; fill: white; }
+    .app-btn-text .small {
+      display: block;
+      font-size: 10px;
+      opacity: 0.6;
+      letter-spacing: 0.03em;
+      margin-bottom: 2px;
+    }
+    .app-btn-text .big {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--dark);
+      padding: 32px var(--pad-x);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo { height: 16px; opacity: 0.5; }
+    .footer-copy { font-size: 12px; color: rgba(255,255,255,0.38); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.38);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: rgba(255,255,255,0.75); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .feature {
+        grid-template-columns: 1fr;
+        padding: 80px var(--pad-x);
+        gap: 48px;
+      }
+      .feature--reverse .feature-text { order: unset; }
+      .feature--reverse .feature-phone { order: unset; }
+      .feature-phone { order: -1; }
+      .feature-phone img { width: min(260px, 65%); }
+
+      .gift-phones { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+      .gift-phone img { height: 480px; }
+
+      .use-cases-grid { grid-template-columns: repeat(2, 1fr); }
+
+      .wish-cards { grid-template-columns: 1fr; max-width: 400px; }
+
+      .pain-points { height: 700px; }
+    }
+
+    @media (max-width: 600px) {
+      .imagine { padding: 120px var(--pad-x); }
+
+      .use-cases-grid { grid-template-columns: 1fr; }
+
+      .pain-points {
+        height: auto;
+        min-height: 640px;
+        padding: 80px 24px;
+      }
+      .pain-word {
+        font-size: clamp(40px, 12vw, 72px);
+      }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .gift-header h2 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="nav" class="nav">
+    <img class="nav-logo" src="images/logo-twentyfive.svg" alt="Twentyfive">
+    <a href="#cta" class="nav-cta">Download</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <img class="hero-logo" src="images/logo-twentyfive.svg" alt="Twentyfive">
+    <div class="hero-scroll" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- IMAGINE -->
+  <section class="imagine">
+    <div class="imagine-inner">
+      <h1>Imagine</h1>
+      <div class="imagine-lines">
+        <p>...a world where the paperwork is already filled in.</p>
+        <p>...where the best option is the only option.</p>
+        <p>...where the burden is eased before it's brought on.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="feature feature--light">
+    <div class="feature-text">
+      <div class="feature-number">01</div>
+      <h2>Future planning</h2>
+      <p>Defining your future,<br>the way you want it.</p>
+    </div>
+    <div class="feature-phone">
+      <img src="images/Mockup-1_opt.png" alt="Future planning">
+    </div>
+  </section>
+
+  <section class="feature feature--dark feature--reverse">
+    <div class="feature-text">
+      <div class="feature-number">02</div>
+      <h2>Put loved ones first</h2>
+      <p>Provide your nearest and dearest<br>with the essentials.</p>
+    </div>
+    <div class="feature-phone">
+      <img src="images/Mockup-2_opt.png" alt="Put loved ones first">
+    </div>
+  </section>
+
+  <section class="feature feature--light">
+    <div class="feature-text">
+      <div class="feature-number">03</div>
+      <h2>Asset management</h2>
+      <p>Assistance managing the things<br>that matter most.</p>
+    </div>
+    <div class="feature-phone">
+      <img src="images/Mockup-3_opt.png" alt="Asset management">
+    </div>
+  </section>
+
+  <!-- GIFT -->
+  <section class="gift">
+    <div class="gift-header">
+      <h2>25 is a gift to you,<br>and those you love.</h2>
+      <p>It exists to ensure your life is celebrated the way you want it to be. And makes it easier for those around you to fulfil your wishes.</p>
+    </div>
+    <div class="gift-phones">
+      <div class="gift-phone">
+        <p>Entrust your thoughts with your nearest and dearest</p>
+        <img src="images/Mockup-1_opt.png" alt="Entrust your thoughts">
+      </div>
+      <div class="gift-phone">
+        <p>Decide what you want to keep private or share</p>
+        <img src="images/Mockup-2_opt.png" alt="Private or share">
+      </div>
+      <div class="gift-phone">
+        <p>25 will assist them with honouring your final wishes</p>
+        <img src="images/Mockup-3_opt.png" alt="Honouring your wishes">
+      </div>
+    </div>
+  </section>
+
+  <!-- USE CASES -->
+  <section class="use-cases">
+    <div class="use-cases-header">
+      <span class="section-label">The use case</span>
+      <h2>Life's too short<br>not to plan it.</h2>
+    </div>
+    <div class="use-cases-grid">
+      <div class="use-case-card">
+        <p>How's that bucket list looking? Ticked any off? Let 25 help make those dreams reality.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Ever wondered what song they'd play at your funeral? Don't leave it to chance. Let 25 make it easy for you.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Secrets? Don't take them to your grave. Let 25 ensure they reach the right person when the time comes.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Anniversaries, MOTs, in-law's birthdays! All easily forgotten. Let 25 make timely reminders and even automate renewals.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Thought wills weren't for you? Think again. Without one your assets can be taken. Let 25 create one in minutes.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Legacies aren't just for football managers. Let 25 build your very own stamp on the planet.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Sat on hold with yet another call centre? Let 25 deal with the bots and arrange key updates.</p>
+      </div>
+      <div class="use-case-card">
+        <p>Completely frightened by the thought? Aren't we all? Let 25 direct personal messages to individuals discretely and securely.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAIN POINTS -->
+  <section class="pain-points">
+    <span class="pain-word pain-word--paperwork">Paperwork</span>
+    <span class="pain-word pain-word--callcentres">Call centres</span>
+    <span class="pain-word pain-word--redtape">Red tape</span>
+    <span class="pain-word pain-word--protocol">Protocol</span>
+    <div class="pain-body">
+      <p>When we're faced with life's hard decisions, we're met with lengthy phone calls, ignorant agents, a forest's worth of forms and a whole heap of hassle.</p>
+    </div>
+  </section>
+
+  <!-- THE CARD -->
+  <section class="the-card">
+    <div class="the-card-header">
+      <span class="section-label">The Card</span>
+      <h2>Beautiful enough to share.<br>Meaningful enough to keep.</h2>
+    </div>
+    <div class="wish-cards">
+      <div class="wish-card wish-card--cream">
+        <div>
+          <p class="wish-card-name">Margaret's Wishes</p>
+          <div class="wish-card-divider"></div>
+          <ul class="wish-card-items">
+            <li>Play "Here Comes the Sun"</li>
+            <li>Scatter ashes at Loch Lomond</li>
+            <li>Wear something colourful</li>
+            <li>No black ties, please</li>
+          </ul>
+        </div>
+        <p class="wish-card-footer">Made with 25</p>
+      </div>
+      <div class="wish-card wish-card--forest">
+        <div>
+          <p class="wish-card-name">James's Wishes</p>
+          <div class="wish-card-divider"></div>
+          <ul class="wish-card-items">
+            <li>Donate to Cancer Research UK</li>
+            <li>A small gathering, family only</li>
+            <li>Music from the 70s please</li>
+            <li>Tell stories. Laugh.</li>
+          </ul>
+        </div>
+        <p class="wish-card-footer">Made with 25</p>
+      </div>
+      <div class="wish-card wish-card--mocha">
+        <div>
+          <p class="wish-card-name">Eleanor's Wishes</p>
+          <div class="wish-card-divider"></div>
+          <ul class="wish-card-items">
+            <li>Read Mary Oliver's "When Death Comes"</li>
+            <li>Plant a tree in the garden</li>
+            <li>Champagne, not tea</li>
+            <li>Dance, if you feel like it</li>
+          </ul>
+        </div>
+        <p class="wish-card-footer">Made with 25</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" class="cta">
+    <h2>Start the conversation<br>that matters most.</h2>
+    <p class="cta-sub">Free to use. Takes five minutes.<br>Might change everything.</p>
+    <div class="app-buttons">
+      <a href="#" class="app-btn">
+        <svg class="app-btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+        <div class="app-btn-text">
+          <span class="small">Download on the</span>
+          <span class="big">App Store</span>
+        </div>
+      </a>
+      <a href="#" class="app-btn">
+        <svg class="app-btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.18 23.76c.3.17.65.24 1.01.2l12.4-12.41-2.96-2.95L3.18 23.76zm16.44-10.6L16.8 11.5l2.82-2.82c.85.49 1.38 1.37 1.38 2.24s-.53 1.75-1.38 2.24zM3.45.27C3.15.63 3 1.12 3 1.69v20.62c0 .57.16 1.06.46 1.42L14.83 12.5 3.45.27zm8.38 8.38L4.15.42c.32-.18.69-.25 1.09-.17l12.09 6.97-5.5 5.43z"/>
+        </svg>
+        <div class="app-btn-text">
+          <span class="small">Get it on</span>
+          <span class="big">Google Play</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img class="footer-logo" src="images/logo-twentyfive.svg" alt="Twentyfive">
+    <p class="footer-copy">© 2026 25. All rights reserved.</p>
+    <nav class="footer-links" aria-label="Footer links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </nav>
+  </footer>
+
+  <script>
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  </script>
+
+</body>
+</html>
