@@ -1,3 +1,43 @@
+@font-face {
+  font-family: 'Agharti';
+  src: url('fonts/AghartiVF.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('fonts/Neue Plak Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('fonts/Neue Plak Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('fonts/Neue Plak SemiBold.ttf') format('truetype');
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Plak';
+  src: url('fonts/Neue Plak Bold.ttf') format('truetype');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -21,7 +61,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Neue Plak', sans-serif;
   color: var(--dark);
   background: var(--cream);
   overflow-x: hidden;
@@ -44,10 +84,29 @@ section {
 
 /* ─── HERO ─── */
 
+.hero-wrapper {
+  height: 300vh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 .hero {
-  position: relative;
-  background: url('images/hero_opt.webp') center center / cover no-repeat;
+  position: sticky;
+  top: 0;
+  scroll-snap-align: none;
+  scroll-snap-stop: unset;
   align-items: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  will-change: transform;
 }
 
 .hero-overlay {
@@ -104,8 +163,8 @@ section {
 .imagine-inner { text-align: center; }
 
 .imagine h1 {
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
+  font-family: 'Agharti', serif;
+  font-weight: 700;
   font-size: clamp(52px, 6.5vw, 88px);
   color: var(--green);
   letter-spacing: -0.025em;
@@ -119,7 +178,7 @@ section {
 }
 
 .imagine-lines p {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Neue Plak', sans-serif;
   font-size: clamp(19px, 2vw, 26px);
   color: var(--dark);
   opacity: 0.72;
@@ -153,8 +212,8 @@ section {
 .feature--dark .feature-number { color: rgba(255,255,255,0.4); }
 
 .feature h2 {
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
+  font-family: 'Agharti', serif;
+  font-weight: 700;
   font-size: clamp(28px, 3.5vw, 48px);
   color: var(--green);
   letter-spacing: -0.02em;
@@ -165,7 +224,7 @@ section {
 .feature--dark h2 { color: white; }
 
 .feature-text p {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Neue Plak', sans-serif;
   font-size: clamp(17px, 1.6vw, 22px);
   color: var(--dark);
   opacity: 0.6;
@@ -195,8 +254,8 @@ section {
 }
 
 .gift-header h2 {
-  font-family: 'Inter', sans-serif;
-  font-weight: 900;
+  font-family: 'Agharti', serif;
+  font-weight: 700;
   font-size: clamp(36px, 5.8vw, 84px);
   color: var(--green);
   letter-spacing: -0.03em;
@@ -205,7 +264,7 @@ section {
 }
 
 .gift-header p {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Neue Plak', sans-serif;
   font-size: clamp(15px, 1.4vw, 18px);
   color: var(--dark);
   opacity: 0.7;
@@ -267,9 +326,9 @@ section {
 }
 
 .use-cases-header h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Agharti', serif;
   font-size: clamp(36px, 5vw, 64px);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--dark);
   line-height: 1.05;
   letter-spacing: -0.01em;
@@ -309,8 +368,8 @@ section {
 
 .pain-word {
   position: absolute;
-  font-family: 'Inter', sans-serif;
-  font-weight: 900;
+  font-family: 'Agharti', serif;
+  font-weight: 700;
   color: var(--green);
   line-height: 1;
   letter-spacing: -0.03em;
@@ -374,9 +433,9 @@ section {
 .the-card-header .section-label { color: rgba(255,255,255,0.35); }
 
 .the-card-header h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Agharti', serif;
   font-size: clamp(32px, 4.5vw, 62px);
-  font-weight: 500;
+  font-weight: 700;
   color: white;
   line-height: 1.2;
 }
@@ -403,9 +462,9 @@ section {
 .wish-card--mocha  { background: #3C3330; }
 
 .wish-card-name {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Agharti', serif;
   font-size: 22px;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--dark);
   margin-bottom: 16px;
 }
@@ -433,7 +492,7 @@ section {
 }
 
 .wish-card-items li {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Neue Plak', sans-serif;
   font-size: 17px;
   color: var(--dark);
   opacity: 0.7;
@@ -467,9 +526,9 @@ section {
 }
 
 .cta h2 {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'Agharti', serif;
   font-size: clamp(36px, 5vw, 68px);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--dark);
   line-height: 1.15;
 }
