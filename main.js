@@ -14,22 +14,22 @@ window.addEventListener('load', () => {
     scrollTrigger: {
       trigger: '.hero-wrapper',
       start: 'top top',
-      // Run the animation over an explicit 300vh of scroll
-      // regardless of the wrapper's total height.
-      end: '+=300%',
+      // Run the animation over 200vh of scroll,
+      // then leave ~100vh of "dead" scroll where nothing changes.
+      end: '+=200%',
       scrub: true,
     },
   });
 
-  // Background: use the full timeline (0 → 1 mapped to 0 → 300vh)
-  // so it's guaranteed to hit opacity: 0 before the extra 100vh.
+  // Background: complete earlier in the scroll (first 50% of the 300vh),
+  // so there's a clear gap where the logo is alone.
   tl.to(
     '.hero-bg',
     {
       scale: 2,
       opacity: 0,
       ease: 'none',
-      duration: 1,
+      duration: 0.5,
     },
     0
   );
@@ -43,9 +43,9 @@ window.addEventListener('load', () => {
     },
     {
       opacity: 1,
-      width: '25vw',
+      width: '35vw',
       ease: 'none',
-      duration: 1,
+      duration: 0.5,
     },
     0
   );
