@@ -14,18 +14,22 @@ window.addEventListener('load', () => {
     scrollTrigger: {
       trigger: '.hero-wrapper',
       start: 'top top',
-      end: 'bottom top', // 400vh wrapper - 100vh hero = 300vh of scroll
+      // Run the animation over an explicit 300vh of scroll
+      // regardless of the wrapper's total height.
+      end: '+=300%',
       scrub: true,
     },
   });
 
-  // Background: zoom from 1 → 1.6 and fade to 0
+  // Background: use the full timeline (0 → 1 mapped to 0 → 300vh)
+  // so it's guaranteed to hit opacity: 0 before the extra 100vh.
   tl.to(
     '.hero-bg',
     {
-      scale: 1.6,
+      scale: 2,
       opacity: 0,
       ease: 'none',
+      duration: 1,
     },
     0
   );
@@ -41,6 +45,7 @@ window.addEventListener('load', () => {
       opacity: 1,
       width: '25vw',
       ease: 'none',
+      duration: 1,
     },
     0
   );
