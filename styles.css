@@ -85,7 +85,7 @@ section {
 /* ─── HERO ─── */
 
 .hero-wrapper {
-  height: 300vh;
+  height: 400vh;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
@@ -121,10 +121,10 @@ section {
 
 .hero-logo {
   position: absolute;
-  width: 100%;
-  left: 0;
+  width: 70vw;
+  left: 50%;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
   display: block;
   mix-blend-mode: overlay;
   pointer-events: none;
