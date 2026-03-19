@@ -9,7 +9,16 @@ function setHeroHeight() {
   hero.style.height = window.innerHeight + 'px';
 }
 setHeroHeight();
-window.addEventListener('resize', setHeroHeight, { passive: true });
+
+// Only re-measure on width changes (orientation flip).
+// Ignores height-only resize events caused by Chrome's bottom bar sliding away.
+let lastWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+  if (window.innerWidth !== lastWidth) {
+    lastWidth = window.innerWidth;
+    setHeroHeight();
+  }
+}, { passive: true });
 
 // Animation completes at this fraction of the total scroll distance.
 // 300vh of 400vh total = 0.75, leaving ~100vh where the logo sits alone.
