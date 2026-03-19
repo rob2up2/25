@@ -50,21 +50,16 @@
 
 /* ─── BASE ─── */
 
-html, body {
-  height: 100%;
-}
-
 html {
-  scroll-behavior: smooth;
+  overflow-x: hidden;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Neue Plak', sans-serif;
   color: var(--dark);
   background: var(--cream);
-  overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 img { max-width: 100%; display: block; }
@@ -80,13 +75,13 @@ section {
 /* ─── HERO ─── */
 
 .hero-wrapper {
-  /* ScrollTrigger will create the scroll distance via pinSpacing/end */
-  position: relative;
+  height: 400vh;
 }
 
 .hero {
-  position: relative; /* containing block for absolutely-positioned children */
-  top: auto;
+  position: sticky;
+  top: 0;
+  height: 100svh;
   align-items: center;
   overflow: hidden;
 }
@@ -113,15 +108,17 @@ section {
 
 .hero-logo {
   position: absolute;
+  width: 35vw;
+  min-width: 200px;
   left: 50%;
   top: 50%;
-  transform: translate3d(-50%, -50%, 0);
-  transform-origin: 50% 50%;
+  transform-origin: center center;
   display: block;
   mix-blend-mode: overlay;
   pointer-events: none;
   user-select: none;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-scroll {

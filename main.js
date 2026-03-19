@@ -1,67 +1,33 @@
-// Hero scroll zoom + logo reveal using GSAP ScrollTrigger
-window.addEventListener('load', () => {
-  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-    console.error('GSAP or ScrollTrigger not loaded');
-    return;
-  }
+const heroWrapper = document.querySelector('.hero-wrapper');
+const heroBg     = document.querySelector('.hero-bg');
+const heroLogo   = document.querySelector('.hero-logo');
 
-  gsap.registerPlugin(ScrollTrigger);
+// Animation completes at this fraction of the total scroll distance.
+// 300vh of 400vh total = 0.75, leaving ~100vh where the logo sits alone.
+const ANIM_FRAC = 0.75;
 
-  // iOS / mobile browser hardening
-  ScrollTrigger.config({
-    ignoreMobileResize: true,
-    anticipatePin: 1,
-  });
+function ease(t) {
+  // Smooth ease-in-out
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
 
-  // We have a 400vh wrapper and 100vh sticky hero.
-  // As you scroll from 0 → 300vh (75% of wrapper),
-  // the background scales & fades out while the logo fades & scales in.
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '.hero-wrapper',
-      start: 'top top',
-      // Total scroll distance while hero stays pinned.
-      // (Formerly emulated via .hero-wrapper { height: 400vh } + sticky)
-      end: '+=400%',
-      scrub: true,
-      invalidateOnRefresh: true,
-      // GSAP-only pinning (no sticky, no scroll-snap)
-      pin: '.hero',
-      pinSpacing: true,
-    },
-  });
+function updateHero() {
+  const scrollY    = window.scrollY;
+  const scrollable = heroWrapper.offsetHeight - window.innerHeight;
+  const raw        = Math.min(Math.max(scrollY / scrollable, 0), 1);
 
-  // Background: complete earlier in the scroll (first 50% of the 300vh),
-  // so there's a clear gap where the logo is alone.
-  tl.to(
-    '.hero-bg',
-    {
-      scale: 2,
-      opacity: 0,
-      ease: 'none',
-      duration: 0.75,
-    },
-    0
-  );
+  // Normalise to 0→1 over the animation window, clamp after that
+  const t = ease(Math.min(raw / ANIM_FRAC, 1));
 
-  // Logo: fade in and scale down to ~25vw width
-  tl.fromTo(
-    '.hero-logo',
-    {
-      opacity: 0,
-      scale: 1.6,
-    },
-    {
-      opacity: 1,
-      scale: 1,
-      ease: 'none',
-      duration: 0.75,
-    },
-    0
-  );
+  // Background: scale 1→2, fade out
+  heroBg.style.transform = `scale(${1 + t})`;
+  heroBg.style.opacity   = 1 - t;
 
-  // Prevent address-bar / font load layout shifts from desyncing triggers
-  window.addEventListener('resize', () => ScrollTrigger.refresh());
-  document.fonts?.ready?.then(() => ScrollTrigger.refresh());
-  ScrollTrigger.refresh();
-});
+  // Logo: scale 2.5→1 (centred), fade in
+  const logoScale = 2.5 - 1.5 * t;
+  heroLogo.style.opacity   = t;
+  heroLogo.style.transform = `translate(-50%, -50%) scale(${logoScale})`;
+}
+
+window.addEventListener('scroll', updateHero, { passive: true });
+updateHero();
