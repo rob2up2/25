@@ -1,6 +1,15 @@
 const heroWrapper = document.querySelector('.hero-wrapper');
 const heroBg     = document.querySelector('.hero-bg');
 const heroLogo   = document.querySelector('.hero-logo');
+const hero       = document.querySelector('.hero');
+
+// CSS viewport units never perfectly match window.innerHeight on iOS Safari.
+// Set the height directly in JS so it's always pixel-perfect.
+function setHeroHeight() {
+  hero.style.height = window.innerHeight + 'px';
+}
+setHeroHeight();
+window.addEventListener('resize', setHeroHeight, { passive: true });
 
 // Animation completes at this fraction of the total scroll distance.
 // 300vh of 400vh total = 0.75, leaving ~100vh where the logo sits alone.
