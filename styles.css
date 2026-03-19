@@ -610,6 +610,29 @@ footer {
 /* ─── RESPONSIVE ─── */
 
 @media (max-width: 900px) {
+  html, body {
+    scroll-snap-type: none;
+  }
+
+  section {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  .hero-wrapper {
+    scroll-snap-align: none;
+    scroll-snap-stop: normal;
+  }
+
+  footer {
+    scroll-snap-align: none;
+  }
+
+  /* Use ScrollTrigger pinning on touch instead of sticky */
+  .hero {
+    position: relative;
+  }
+
   section {
     height: auto;
     min-height: 100svh;

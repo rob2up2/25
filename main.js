@@ -7,6 +7,12 @@ window.addEventListener('load', () => {
 
   gsap.registerPlugin(ScrollTrigger);
 
+  // iOS / mobile browser hardening
+  ScrollTrigger.config({
+    ignoreMobileResize: true,
+    anticipatePin: 1,
+  });
+
   // We have a 400vh wrapper and 100vh sticky hero.
   // As you scroll from 0 → 300vh (75% of wrapper),
   // the background scales & fades out while the logo fades & scales in.
@@ -18,6 +24,10 @@ window.addEventListener('load', () => {
       // then leave ~100vh of "dead" scroll where nothing changes.
       end: '+=200%',
       scrub: true,
+      invalidateOnRefresh: true,
+      // On touch devices, pin via ScrollTrigger instead of CSS sticky
+      pin: ScrollTrigger.isTouch ? '.hero' : false,
+      pinSpacing: false,
     },
   });
 
@@ -49,4 +59,9 @@ window.addEventListener('load', () => {
     },
     0
   );
+
+  // Prevent address-bar / font load layout shifts from desyncing triggers
+  window.addEventListener('resize', () => ScrollTrigger.refresh());
+  document.fonts?.ready?.then(() => ScrollTrigger.refresh());
+  ScrollTrigger.refresh();
 });
