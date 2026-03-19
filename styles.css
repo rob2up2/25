@@ -52,7 +52,6 @@
 
 html, body {
   height: 100%;
-  scroll-snap-type: y mandatory;
 }
 
 html {
@@ -70,11 +69,7 @@ body {
 
 img { max-width: 100%; display: block; }
 
-/* ─── SNAP SECTIONS ─── */
-
 section {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   height: 100svh;
   overflow: hidden;
   display: flex;
@@ -85,16 +80,13 @@ section {
 /* ─── HERO ─── */
 
 .hero-wrapper {
-  height: 400vh;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  /* ScrollTrigger will create the scroll distance via pinSpacing/end */
+  position: relative;
 }
 
 .hero {
-  position: sticky;
-  top: 0;
-  scroll-snap-align: none;
-  scroll-snap-stop: unset;
+  position: relative; /* containing block for absolutely-positioned children */
+  top: auto;
   align-items: center;
   overflow: hidden;
 }
@@ -121,10 +113,10 @@ section {
 
 .hero-logo {
   position: absolute;
-  width: 70vw;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate3d(-50%, -50%, 0);
+  transform-origin: 50% 50%;
   display: block;
   mix-blend-mode: overlay;
   pointer-events: none;
@@ -590,7 +582,6 @@ footer {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  scroll-snap-align: start;
 }
 
 .footer-logo { height: 16px; opacity: 0.5; }
@@ -610,29 +601,6 @@ footer {
 /* ─── RESPONSIVE ─── */
 
 @media (max-width: 900px) {
-  html, body {
-    scroll-snap-type: none;
-  }
-
-  section {
-    scroll-snap-align: none;
-    scroll-snap-stop: normal;
-  }
-
-  .hero-wrapper {
-    scroll-snap-align: none;
-    scroll-snap-stop: normal;
-  }
-
-  footer {
-    scroll-snap-align: none;
-  }
-
-  /* Use ScrollTrigger pinning on touch instead of sticky */
-  .hero {
-    position: relative;
-  }
-
   section {
     height: auto;
     min-height: 100svh;

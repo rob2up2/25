@@ -20,14 +20,14 @@ window.addEventListener('load', () => {
     scrollTrigger: {
       trigger: '.hero-wrapper',
       start: 'top top',
-      // Run the animation over 200vh of scroll,
-      // then leave ~100vh of "dead" scroll where nothing changes.
-      end: '+=200%',
+      // Total scroll distance while hero stays pinned.
+      // (Formerly emulated via .hero-wrapper { height: 400vh } + sticky)
+      end: '+=400%',
       scrub: true,
       invalidateOnRefresh: true,
-      // On touch devices, pin via ScrollTrigger instead of CSS sticky
-      pin: ScrollTrigger.isTouch ? '.hero' : false,
-      pinSpacing: false,
+      // GSAP-only pinning (no sticky, no scroll-snap)
+      pin: '.hero',
+      pinSpacing: true,
     },
   });
 
@@ -39,7 +39,7 @@ window.addEventListener('load', () => {
       scale: 2,
       opacity: 0,
       ease: 'none',
-      duration: 0.5,
+      duration: 0.75,
     },
     0
   );
@@ -49,13 +49,13 @@ window.addEventListener('load', () => {
     '.hero-logo',
     {
       opacity: 0,
-      width: '70vw',
+      scale: 1.6,
     },
     {
       opacity: 1,
-      width: '35vw',
+      scale: 1,
       ease: 'none',
-      duration: 0.5,
+      duration: 0.75,
     },
     0
   );
